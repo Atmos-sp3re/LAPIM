@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Outputs of example.py
+Results/
+
+# Local files
+.DS_Store
+.idea/
+.vscode/
