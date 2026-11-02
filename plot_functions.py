@@ -114,24 +114,30 @@ def plot_convergence(errors, ax=None):
     return ax
 
 
-def plot_field(field, pixel_size=None, title: str = None, unwrap: bool = True,
-               cmap='gist_ncar'):
+def plot_reference_plane(meas_intensity, calc_intensity, field, pixel_size=None,
+                         title: str = None, unwrap: bool = True, cmap='gist_ncar'):
     """
-    Amplitude, intensity and phase of a complex field. Axes in mm if
-    pixel_size (m) is given, in pixels otherwise.
+    Result at the reference plane: measured intensity (preprocessed), last
+    calculated intensity (same colour scale) and phase of the retrieved
+    field. Axes in mm if pixel_size (m) is given, in pixels otherwise.
+
+    With a PhaseRetriever r after retrieve_phase():
+        plot_reference_plane(r.ims_processed[0], r.last_calc_intensity, r.ret_field)
     """
-    fig, axes = plt.subplots(1, 3, figsize=(13, 4), sharex=True, sharey=True)
+    fig, axes = plt.subplots(1, 3, figsize=(14, 4.2), sharex=True, sharey=True)
     phase = unwrap_phase(np.angle(field)) if unwrap else np.angle(field)
     extent = None
     if pixel_size is not None:
         h, w = field.shape
         extent = (0, w * pixel_size * 1e3, h * pixel_size * 1e3, 0)
-    for ax, name, data, cm in ((axes[0], "Amplitude", np.abs(field), cmap),
-                               (axes[1], "Intensity", np.abs(field) ** 2, cmap),
-                               (axes[2], "Phase (rad)" + (", unwrapped" if unwrap else ""),
-                                phase, 'twilight')):
+    vmax = max(np.max(meas_intensity), np.max(calc_intensity))
+    for ax, name, data, cm, vlims in (
+            (axes[0], "Measured intensity", meas_intensity, cmap, (0, vmax)),
+            (axes[1], "Calculated intensity (last iteration)", calc_intensity, cmap, (0, vmax)),
+            (axes[2], "Retrieved phase (rad)" + (", unwrapped" if unwrap else ""),
+             phase, 'twilight', (None, None))):
         ax.set_title(name)
-        _colorbar(ax, ax.imshow(data, cmap=cm, extent=extent))
+        _colorbar(ax, ax.imshow(data, cmap=cm, extent=extent, vmin=vlims[0], vmax=vlims[1]))
         ax.set_xlabel("x (mm)" if extent else "x (px)")
     axes[0].set_ylabel("y (mm)" if extent else "y (px)")
     if title:

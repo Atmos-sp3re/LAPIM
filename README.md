@@ -104,7 +104,7 @@ Results are written to `Results/<data set>/`:
   iteration;
 - `_config.json`: every preprocessing and retrieval parameter, the date and the
   duration;
-- `caustic.png`, `convergence.png`, `field.png`: the figures.
+- `caustic.png`, `convergence.png`, `reference_plane.png` (measured and calculated intensities, retrieved phase): the figures.
 
 The log goes to `Results/retrieve.log`.
 

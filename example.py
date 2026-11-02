@@ -8,7 +8,7 @@ reference plane, where the field is retrieved).
 
 Outputs (in Results/<data set>/):
     <data set>_field.npy, _calc_intensity.npy, _errors.npy, _config.json
-    caustic.png, convergence.png, field.png
+    caustic.png, convergence.png, reference_plane.png
 and Results/retrieve.log.
 """
 import logging
@@ -20,7 +20,7 @@ import numpy as np
 import tifffile
 
 from phase_retriever import PhaseRetriever, configure_logging
-from plot_functions import plot_caustic, plot_convergence, plot_field
+from plot_functions import plot_caustic, plot_convergence, plot_reference_plane
 from utils import caustic, get_beam_size
 
 HERE = Path(__file__).resolve().parent
@@ -108,8 +108,9 @@ def run_retrieval(name):
                  f"d0 = ({p['d0x'] * 1e6:.1f}, {p['d0y'] * 1e6:.1f}) µm")
 
     plot_convergence(errors).figure.savefig(output_dir / "convergence.png", dpi=150)
-    plot_field(field, pixel_size=px, title=f"Retrieved field at the reference plane, {name}").savefig(
-        output_dir / "field.png", dpi=150)
+    plot_reference_plane(retriever.ims_processed[0], retriever.last_calc_intensity, field,
+                         pixel_size=px, title=f"Reference plane, {name}").savefig(
+        output_dir / "reference_plane.png", dpi=150)
     return field
 
 
