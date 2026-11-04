@@ -118,7 +118,7 @@ new initial phase at each run.
 ```python
 from phase_retriever import PhaseRetriever, configure_logging
 
-configure_logging("retrieve.log")
+configure_logging("retrieve.log")  # not necessary 
 retriever = PhaseRetriever(raw_images=images,       # list of 2D arrays, reference plane first
                            distances=distances,     # m, from the reference plane (first = 0)
                            wavelength=343e-9, pixel_size=3.75e-6,
