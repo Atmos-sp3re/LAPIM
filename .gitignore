@@ -3,7 +3,9 @@ __pycache__/
 *.py[cod]
 
 # Outputs of example.py
-Results/
+Results/perturbed_set
+Results/reference_set
+Results/retrieve.log
 
 # Local files
 .DS_Store
